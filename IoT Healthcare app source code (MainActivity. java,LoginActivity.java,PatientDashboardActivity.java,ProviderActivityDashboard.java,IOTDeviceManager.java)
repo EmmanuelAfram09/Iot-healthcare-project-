@@ -1,0 +1,336 @@
+Project Structure Overview
+
+
+- src/
+  - main/
+    - java/
+      - com/yourproject/iothealthcare/
+        - MainActivity.java
+        - LoginActivity.java
+        - PatientDashboardActivity.java
+        - ProviderDashboardActivity.java
+        - IoTDeviceManager.java
+    - res/
+      - layout/
+        - activity_main.xml
+        - activity_login.xml
+        - activity_patient_dashboard.xml
+        - activity_provider_dashboard.xml
+      - values/
+        - strings.xml
+        - styles.xml
+
+
+1. `MainActivity.java`
+
+
+package com.yourproject.iothealthcare;
+
+import android.content.Intent;
+import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Redirect to LoginActivity
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+}
+
+
+2. `LoginActivity.java`
+
+
+package com.yourproject.iothealthcare;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class LoginActivity extends AppCompatActivity {
+
+    private EditText emailField, passwordField;
+    private Button loginButton;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+
+        emailField = findViewById(R.id.emailField);
+        passwordField = findViewById(R.id.passwordField);
+        loginButton = findViewById(R.id.loginButton);
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginUser();
+            }
+        });
+    }
+
+    private void loginUser() {
+        String email = emailField.getText().toString().trim();
+        String password = passwordField.getText().toString().trim();
+
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+            Toast.makeText(LoginActivity.this, "Please enter your email and password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Firebase authentication logic (pseudo code)
+        /*
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    redirectToDashboard();
+                } else {
+                    Toast.makeText(LoginActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
+                }
+            });
+        */
+    }
+
+    private void redirectToDashboard() {
+        // Redirect based on user role (Patient/Provider)
+        Intent intent = new Intent(LoginActivity.this, PatientDashboardActivity.class); // Change to ProviderDashboardActivity for providers
+        startActivity(intent);
+        finish();
+    }
+}
+
+
+3. `PatientDashboardActivity.java`
+
+```java
+package com.yourproject.iothealthcare;
+
+import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class PatientDashboardActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_patient_dashboard);
+
+        // Real-time data monitoring logic
+        // Use Bluetooth API to connect with IoT devices
+        // Display health data in the UI
+    }
+}
+
+
+4. `ProviderDashboardActivity.java`
+
+
+package com.yourproject.iothealthcare;
+
+import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class ProviderDashboardActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_provider_dashboard);
+
+        // Display list of patients and their health data
+        // Implement alert management system
+    }
+}
+
+
+5. `IoTDeviceManager.java`
+
+
+package com.yourproject.iothealthcare;
+
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+import java.io.IOException;
+import java.util.UUID;
+
+public class IoTDeviceManager {
+
+    private BluetoothAdapter bluetoothAdapter;
+    private BluetoothSocket bluetoothSocket;
+
+    public IoTDeviceManager() {
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    }
+
+    public void connectToDevice(BluetoothDevice device) throws IOException {
+        UUID uuid = device.getUuids()[0].getUuid();
+        bluetoothSocket = device.createRfcommSocketToServiceRecord(uuid);
+        bluetoothSocket.connect();
+    }
+
+    public void disconnectFromDevice() throws IOException {
+        if (bluetoothSocket != null) {
+            bluetoothSocket.close();
+        }
+    }
+
+    public void sendData(String data) throws IOException {
+        if (bluetoothSocket != null) {
+            bluetoothSocket.getOutputStream().write(data.getBytes());
+        }
+    }
+
+    public String receiveData() throws IOException {
+        if (bluetoothSocket != null) {
+            byte[] buffer = new byte[1024];
+            int bytes = bluetoothSocket.getInputStream().read(buffer);
+            return new String(buffer, 0, bytes);
+        }
+        return null;
+    }
+}
+
+
+6. 'XML Layouts'
+
+ `activity_main.xml`
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome to IoT Healthcare"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+</LinearLayout>
+
+
+`activity_login.xml`
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/emailField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/passwordField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Login" />
+
+</LinearLayout>
+
+
+ `activity_patient_dashboard.xml`
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/vitalSignTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Real-Time Vital Signs"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true" />
+
+    <!-- Add more views to display data -->
+
+</RelativeLayout>
+
+
+`activity_provider_dashboard.xml`
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/providerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Provider Dashboard"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true" />
+
+    <!-- Add more views to display patient data -->
+
+</RelativeLayout>
+
+
+7. `strings.xml`
+
+
+<resources>
+    <string name="app_name">IoT Healthcare</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="login_button">Login</string>
+    <string name="welcome_message">Welcome to IoT Healthcare</string>
+    <string name="vital_sign_text">Real-Time Vital Signs</string>
+    <string name="provider_dashboard">Provider Dashboard</string>
+</resources>
+
+
+8. `styles.xml`
+
+
+<resources>
+
+    <!-- Base application theme -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+</resources>
+
+
