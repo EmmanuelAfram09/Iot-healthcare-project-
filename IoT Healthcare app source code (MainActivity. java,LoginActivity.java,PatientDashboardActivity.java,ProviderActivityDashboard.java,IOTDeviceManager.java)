@@ -21,7 +21,7 @@ Project Structure Overview
         - styles.xml
 
 
-1. `MainActivity.java`
+// 1. `MainActivity.java`
 
 
 package com.yourproject.iothealthcare;
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 }
 
 
-2. `LoginActivity.java`
+// 2. `LoginActivity.java`
 
 
 package com.yourproject.iothealthcare;
@@ -112,9 +112,9 @@ public class LoginActivity extends AppCompatActivity {
 }
 
 
-3. `PatientDashboardActivity.java`
+// 3. `PatientDashboardActivity.java`
 
-```java
+
 package com.yourproject.iothealthcare;
 
 import android.os.Bundle;
@@ -134,7 +134,7 @@ public class PatientDashboardActivity extends AppCompatActivity {
 }
 
 
-4. `ProviderDashboardActivity.java`
+// 4. `ProviderDashboardActivity.java`
 
 
 package com.yourproject.iothealthcare;
@@ -155,7 +155,7 @@ public class ProviderDashboardActivity extends AppCompatActivity {
 }
 
 
-5. `IoTDeviceManager.java`
+// 5. `IoTDeviceManager.java`
 
 
 package com.yourproject.iothealthcare;
@@ -204,7 +204,7 @@ public class IoTDeviceManager {
 }
 
 
-6. 'XML Layouts'
+// 6. 'XML Layouts'
 
  `activity_main.xml`
 
@@ -306,7 +306,7 @@ public class IoTDeviceManager {
 </RelativeLayout>
 
 
-7. `strings.xml`
+// 7. `strings.xml`
 
 
 <resources>
@@ -320,7 +320,7 @@ public class IoTDeviceManager {
 </resources>
 
 
-8. `styles.xml`
+// 8. `styles.xml`
 
 
 <resources>
